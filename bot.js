@@ -1,82 +1,88 @@
-var Discord = require("discord.js");
-var prefix = "t!";
-var client = new Discord.Client();
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const prefix = '-';
 
-client.on("ready", () => {
-  console.log("ready to rumble!");
-});
+client.on('ready', () =>{
+    console.log('I am ready!');
+    client.user.setActivity('Prefix is -', { type: 'PLAYING'})
+})
 
-var bannedwords = "fuck,shit,slut,whore".split(",");
 
-client.on("message", msg => {
-  if (msg.guild === null) return;
 
-  for (i=0;i<bannedwords.length;i++) {
-    if (msg.content.toLowerCase().includes(bannedwords[i])) {
-      msg.delete();
-      msg.reply("Please don't swear!");
-      return;
+client.on('message', msg =>{
+    if(msg.content ===  "Is boss hot?"){
+        msg.reply('Of course');                                                                                                                                                                                                                                                                                                     
     }
-  }
+})
 
-  if (msg.author.bot) return;
-  if (!msg.member.hasPermission("ADMINISTRATOR")) return;
 
-  if (!msg.content.toLowerCase().startsWith(prefix)) return;
-  msg.delete();
-  if (msg.content.toLowerCase().startsWith(prefix + "kick ")) {
-    var mem = msg.mentions.members.first();
-    mem.kick().then(() => {
-      msg.channel.send(mem.displayName + " has successfully been kicked by " + msg.author.username + "!");
-    }).catch(e => {
-      msg.channel.send("An error occured!");
-    });
-  }
-  if (msg.content.toLowerCase().startsWith(prefix + "ban ")) {
-    var mem = msg.mentions.members.first();
-    var mc = msg.content.split(" ")[2];
-    mem.ban(mc).then(() => {
-      msg.channel.send(mem.displayName + " has successfully been banned by " + msg.author.username + " for " + mc + " days!");
-    }).catch(e => {
-      msg.channel.send("An error occured!");
-    });
-  }
-  if (msg.content.toLowerCase().startsWith(prefix + "mute")) {
-    var mem = msg.mentions.members.first();
-    if (msg.guild.roles.find("name", "Muted")) {
-      mem.addRole(msg.guild.roles.find("name", "Muted")).then(() => {
-        msg.channel.send(mem.displayName + " has successfully been muted!");
-      }).catch(e => {
-        msg.channel.send("An error occured!");
-        console.log(e);
-      });
 
+client.on('message', msg =>{
+    if(msg.content ===  "Is acad hot?"){
+        msg.reply('Heck no');
     }
-  }
-  if (msg.content.toLowerCase().startsWith(prefix + "unmute")) {
-    var mem = msg.mentions.members.first();
-    if (msg.guild.roles.find("name", "Muted")) {
-      mem.removeRole(msg.guild.roles.find("name", "Muted")).then(() => {
-        msg.channel.send(mem.displayName + " has successfully been unmuted!");
-      }).catch(e => {
-        msg.channel.send("An error occured!");
-        console.log(e);
-      });
+})                           
 
+
+
+client.on('message', msg =>{
+    if(msg.content ===  "Is tribe hot?"){
+        msg.reply('Lmao thats a joke');
     }
-  }
-  if (msg.content.toLowerCase().startsWith(prefix + "purge")) {
-    var mc = msg.content.split(" ")[1];
-    msg.channel.bulkDelete(mc);
-  }
-  if (msg.content.toLowerCase().startsWith(prefix + "eval")) {
-    var sc = msg.content.substring(msg.content.indexOf(" "));
-    eval(sc);
-  }
-  if (msg.content.toLowerCase().startsWith(prefix + "calc")) {
-    var ca = msg.content.substring(msg.content.indexOf(" "));
-    msg.reply(ca + " is " + eval(ca).toFixed(2));
-  }
-});
+})
 
-client.login(Your token here!);
+
+
+client.on('message', msg =>{
+
+    let args = msg.content.substring(prefix.length).split(" ");
+    
+    switch(args[0]){
+        case 'prices':
+            msg.reply('B17: 250, Hawthorn: 300, R21A: 350');
+            break;
+        case 'B17':
+            msg.channel.sendMessage('@Academy_RBLX someone is interested in buying a B17!');
+            break;
+        case 'Hawthorn':
+            msg.channel.sendMessage('@Academy_RBLX someone is interested in buying a Hawthorn!');
+            break;
+        case 'R21A':
+            msg.channel.sendMessage('@Academy_RBLX someone is interested in buying a R21A!');
+            break;
+    }
+})
+
+client.on('message', msg =>{
+
+    let args = msg.content.substring(prefix.length).split(" ");
+
+    switch(args[0]){
+        case 'kick':
+            if(!args[1]) msg.channel.sendMessage('Make sure to mention a player!')
+                                                            
+            const user = msg.mentions.users.first();
+
+            if(user){
+                const member = msg.guild.member(user);
+
+                if (!msg.member.hasPermission("ADMINISTRATOR")) return;
+
+                    member.hasPermission('ADMINISTRATOR').kick('You were kicked!').then(() =>{
+                        msg.reply('Member sucessfully kicked!');
+                    }).catch(err =>{
+                        msg.reply('Member not kicked. Something went wrong.')
+                        console.log(err);
+                    });
+                } else{
+                    msg.reply('Not in server!');
+
+                }
+            }
+        
+        break;
+})
+
+
+
+client.login(process.env.BOT_TOKEN);                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
